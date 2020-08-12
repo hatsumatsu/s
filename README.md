@@ -48,11 +48,11 @@ state.subscribe('counter', () => {
 });
 
 state.subscribe('lunch/variation', () => {
-    // fired when 'lunch/table' is updated.
+    // fired when 'lunch/variation' is updated.
 });
 
 state.subscribe('lunch', () => {
-    // fired when any property of 'lunch' is updated.
+    // fired when any (child-) property of 'lunch' is updated.
 });
 
 // subscribe() returns a subscription ID that can be used to unsubscribe:
