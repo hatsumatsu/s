@@ -1,14 +1,14 @@
 ```
-  //////
-///     ´
-  ///
-    /////
-,     ///
- //////
+    //////
+  ///     ´
+    ///
+      /////
+  ,     ///
+   //////
 
 ```
 
-Lean subscription-based state management
+Lean subscription-based state management.
 
 ### Installation
 
