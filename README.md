@@ -47,11 +47,11 @@ state.set('lunch/variation', 'bufalina');
 // GET
 state.get('counter');
 
+// SUBSCRIBE
 state.subscribe('counter', () => {
     // fired when 'counter' is updated.
 });
 
-// SUBSCRIBE
 state.subscribe('lunch/variation', () => {
     // fired when 'lunch/variation' is updated.
 });
