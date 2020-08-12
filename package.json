@@ -1,0 +1,8 @@
+{
+    "name": "@superstructure.net/s",
+    "version": "0.0.1",
+    "main": "s.js",
+    "description": "Lean subscription-based state management",
+    "license": "MIT",
+    "repository": "hatsumatsu/s"
+}
