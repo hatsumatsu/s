@@ -21,6 +21,7 @@ import S from '@superstructure.net/s';
 
 let state = new S();
 
+// SET
 // set single value
 state.set('counter', 123);
 
@@ -43,10 +44,14 @@ state.set('lunch/variation', 'bufalina');
 //   }
 // }
 
+// GET
+state.get('counter');
+
 state.subscribe('counter', () => {
     // fired when 'counter' is updated.
 });
 
+// SUBSCRIBE
 state.subscribe('lunch/variation', () => {
     // fired when 'lunch/variation' is updated.
 });
@@ -55,6 +60,7 @@ state.subscribe('lunch', () => {
     // fired when any (child-) property of 'lunch' is updated.
 });
 
+// UNSUBSCRIBE
 // subscribe() returns a subscription ID that can be used to unsubscribe:
 let subscriptionId = state.subscribe('lunch', () => {});
 state.unsubscribe(subscriptionId);
