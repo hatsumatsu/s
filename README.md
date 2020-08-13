@@ -5,7 +5,6 @@
       /////
   ,     ///
    //////
-
 ```
 
 Lean subscription-based state management.
@@ -34,7 +33,7 @@ state.set('lunch', {
 // deep-set object property
 state.set('lunch/variation', 'bufalina');
 
-// The created state tree looks like:
+// The state tree
 //
 // {
 //   counter: 123,
@@ -45,7 +44,8 @@ state.set('lunch/variation', 'bufalina');
 // }
 
 // GET
-state.get('counter');
+state.get('counter'); // 123
+state.get('lunch/type'); // 'pizza'
 
 // SUBSCRIBE
 state.subscribe('counter', () => {
@@ -57,7 +57,7 @@ state.subscribe('lunch/variation', () => {
 });
 
 state.subscribe('lunch', () => {
-    // fired when any (child-) property of 'lunch' is updated.
+    // fired when 'lunch' or any of its child properties is updated.
 });
 
 // UNSUBSCRIBE
