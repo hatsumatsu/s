@@ -14,116 +14,190 @@ Lean subscription-based state management.
  * 
  */
 
-export default class S {
-    constructor() {
-        this._state = {};
-        this._subscriptionId = 0;
-        this._subscriptions = [];
+export class S {
+    constructor(initialState) {
+      // {
+      //   'x': 1,
+      //   'y': 'Hi!'
+      // }
+      this._state = {};
+  
+      // [
+      //   {
+      //      key: 'x'.
+      //      callback: () => {}
+      //   }
+      // ]
+      this._subscriptions = [];
+  
+      // {
+      //   x: {timeout},
+      //   x: {timeout}
+      // }
+      this._onChangeDelays = {};
+  
+      if (initialState) {
+        this._state = initialState;
+      }
     }
-
-    init(key, value = null) {
-        this.set(key, value, true);
+  
+    set(key, value = null) {
+      if (!key || typeof key !== 'string') {
+        throw new Error('No key provided.');
+      }
+  
+      if (value === this._state[key]) {
+        return;
+      }
+  
+      this._state[key] = value;
+  
+      this._debounceOnChange(key);
     }
-
-    set(key, value = null, checkSubscriptions = true) {
-        if (!key || typeof key !== 'string') {
-            throw new Error('No key of type string provided.');
-        }
-
-        let keys = key.split('/');
-        let root = this._state;
-        for (let i = 0; i < keys.length; i++) {
-            if (!root.hasOwnProperty(keys[i]) || typeof root[keys[i]] !== 'object') {
-                root[keys[i]] = {};
-            }
-
-            if (i === keys.length - 1) {
-                root[keys[i]] = value;
-            }
-
-            root = root[keys[i]];
-        }
-
-        if (checkSubscriptions) {
-            this._checkSubscriptions(key);
-        }
-    }
-
+  
     get(key) {
-        if (!key || typeof key !== 'string') {
-            throw new Error('No key of type string provided.');
-        }
-
-        let keys = key.split('/');
-        let root = this._state;
-        for (let i = 0; i < keys.length; i++) {
-            if (!root.hasOwnProperty(keys[i])) {
-                return false;
-            }
-
-            if (i === keys.length - 1) {
-                return root[keys[i]];
-            }
-
-            root = root[keys[i]];
-        }
+      if (!key || typeof key !== 'string') {
+        throw new Error('No key provided.');
+      }
+  
+      return this._state[key];
     }
-
-    subscribe(key, handler) {
-        if (!key || typeof key !== 'string') {
-            throw new Error('No key of type string provided.');
-        }
-
-        if (!handler || typeof handler !== 'function') {
-            throw new Error('No handler of type function provided.');
-        }
-
-        if (!this._subscriptions.hasOwnProperty(key)) {
-            this._subscriptions[key] = [];
-        }
-
-        this._subscriptionId = this._subscriptionId + 1;
-
-        this._subscriptions[key].push({
-            id: this._subscriptionId,
-            handler: handler,
-        });
-
-        return this._subscriptionId;
+  
+    on(key, callback) {
+      if (!key || typeof key !== 'string') {
+        throw new Error('No key provided.');
+      }
+  
+      if (!callback || typeof callback !== 'function') {
+        throw new Error('No callback provided.');
+      }
+  
+      this._subscriptions.push({
+        key: key,
+        callback: callback
+      });
     }
-
-    unsubscribe(subscriptionId) {
-        if (!subscriptionId) {
-            throw new Error('No subscription ID provided.');
+  
+    off(key, callback = null) {
+      if (!key) {
+        this._subscriptions = [];
+      } else {
+        if (!callback) {
+          this._subscriptions = this._subscriptions.filter(
+            (subscription) => key !== subscription.key
+          );
+        } else {
+          this._subscriptions = this._subscriptions.filter((subscription) => {
+            return key !== subscription.key || callback !== subscription.callback;
+          });
         }
-
-        for (const key in this._subscriptions) {
-            this._subscriptions[key] = this._subscriptions[key].filter((subscription) => {
-                return subscription.id !== subscriptionId;
-            });
-        }
+      }
     }
-
-    _checkSubscriptions(key = '') {
-        if (!key || typeof key !== 'string') {
-            throw new Error('No key of type string provided.');
-        }
-
-        let keys = key.split('/');
-        for (let i = keys.length; i > 0; i--) {
-            let _key = keys.slice(0, i).join('/');
-
-            if (!this._subscriptions.hasOwnProperty(_key)) {
-                continue;
-            }
-
-            for (const subscription of this._subscriptions[_key]) {
-                if (!subscription.hasOwnProperty('handler') || typeof subscription.handler !== 'function') {
-                    return;
-                }
-
-                subscription.handler.call();
-            }
-        }
+  
+    destroy() {
+      this._state = {};
+      this._subscriptions = [];
+      this._onChangeDelays = {};
     }
-}
+  
+    _debounceOnChange(key) {
+      if (!key || typeof key !== 'string') {
+        return;
+      }
+  
+      if (this._onChangeDelays[key]) {
+        clearTimeout(this._onChangeDelays[key]);
+      }
+      this._onChangeDelays[key] = setTimeout(() => {
+        this._onChange(key);
+      }, 1);
+    }
+  
+    _onChange(key) {
+      if (this._subscriptions.length < 1) {
+        return;
+      }
+  
+      this._subscriptions.forEach((_subscription) => {
+        if (key === _subscription.key) {
+          _subscription.callback.call();
+        }
+      });
+    }
+  }
+  
+  export class s {
+    constructor(initialValue) {
+      // 1
+      this._value = null;
+  
+      // [
+      //   () => {},
+      //   () => {}
+      // ]
+      this._subscriptions = [];
+  
+      this._onChangeDelay = null;
+  
+      if (initialValue) {
+        this._value = initialValue;
+      }
+    }
+  
+    set(value = null) {
+      if (value === this._value) {
+        return;
+      }
+  
+      this._value = value;
+  
+      // debounce onChange();
+      if (this._onChangeDelay) {
+        clearTimeout(this._onChangeDelay);
+      }
+      this._onChangeDelay = setTimeout(() => {
+        this._onChange();
+      }, 1);
+    }
+  
+    get() {
+      return this._value;
+    }
+  
+    on(callback) {
+      if (!callback || typeof callback !== 'function') {
+        throw new Error('No callback provided.');
+      }
+  
+      this._subscriptions.push(callback);
+    }
+  
+    off(callback = null) {
+      if (!callback) {
+        this._subscriptions = [];
+      } else {
+        this._subscriptions = this._subscriptions.filter(
+          (_callback) => callback !== _callback
+        );
+      }
+    }
+  
+    destroy() {
+      this._value = null;
+      this._subscriptions = [];
+      if (this._onChangeDelay) {
+        clearTimeout(this._onChangeDelay);
+      }
+    }
+  
+    _onChange() {
+      if (this._subscriptions.length < 1) {
+        return;
+      }
+  
+      this._subscriptions.forEach((_callback) => {
+        _callback.call();
+      });
+    }
+  }
+  
