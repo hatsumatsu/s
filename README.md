@@ -20,8 +20,8 @@ import { S } from '@superstructure.net/s';
 
 // Init state object with key:value pairs
 const state = new S({
-  x: 0,
-  message: 'Hi!'
+    x: 0,
+    message: 'Hi!',
 });
 
 // Set value
@@ -32,7 +32,7 @@ state.get('x'); // 1
 
 // Subscribe to changes
 const onChangeX = () => {
-  console.log('x changed', state.get('x'));
+    console.log('x changed', state.get('x'));
 };
 
 state.on('x', onChangeX);
@@ -49,13 +49,11 @@ state.off();
 state.destroy();
 ```
 
-### Notes
-
 Subscriptions are debounced per key, updating a value frequently only calls its callbacks once:
 
 ```js
 state.on('x', () => {
-  console.log('x changed', state.get('x'));
+    console.log('x changed', state.get('x'));
 });
 
 state.set('x', 1);
@@ -66,9 +64,28 @@ state.set('x', 4);
 // Only logs 'x changed 4'
 ```
 
+Be aware that debouncing means subscriptions are async:
+
+```js
+state.on('x', () => {
+    console.log('x changed', state.get('x'));
+});
+
+console.log('A');
+
+state.set('x', 1);
+
+console.log('B');
+
+// Log order:
+//    'A'
+//    'B'
+//    'x changed 1'
+```
+
 ### Atomic state
 
-Instead of having a state tree with ky value pairs you can also use atomic state items with `s` instead of `S`.
+Instead of having a state tree with `key:value` pairs you can also use atomic state items with `s` instead of `S`.
 
 ```js
 import { s } from '@superstructure.net/s';
@@ -85,7 +102,7 @@ x.get(); // 1
 
 // Subscribe to changes
 const onChangeX = () => {
-  console.log('x changed', x.get());
+    console.log('x changed', x.get());
 };
 
 x.on(onChangeX);
