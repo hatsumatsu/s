@@ -37,12 +37,21 @@ const onChangeX = () => {
 
 state.on('x', onChangeX);
 
-// Unsubscribe
-// 1. Unsubscribe specific callback
+// pass optional context for bulk unsubscription
+state.on('x', onChangeX, 'myContext');
+
+// Unsubscribe ...
+// ... key + callback
 state.off('x', onChangeX);
-// 2. Unsubscribe all callbacks attached to a key
+// ... key + context
+state.off('x', 'myContext');
+// ... key
 state.off('x');
-// 3. Unsubscribe all callbacks
+// ... callback
+state.off(null, onChangeX);
+// ... context
+state.off(null, 'myContext');
+// ... all
 state.off();
 
 // Destroy instance
