@@ -37,12 +37,12 @@ export class S {
         // }
         this._onChangeDelays = {};
 
-        if (initialState) {
+        if (initialState !== undefined) {
             this._state = initialState;
         }
     }
 
-    set(key, value = null) {
+    set(key, value = undefined) {
         if (!key || typeof key !== 'string') {
             throw new Error('No key provided.');
         }
@@ -64,7 +64,7 @@ export class S {
         return this._state[key];
     }
 
-    on(key, callback, context = null) {
+    on(key, callback, context = undefined) {
         if (!key || typeof key !== 'string') {
             throw new Error('No key provided.');
         }
@@ -80,7 +80,7 @@ export class S {
         });
     }
 
-    off(key, callbackOrContext = null) {
+    off(key, callbackOrContext = undefined) {
         if (!key) {
             if (!callbackOrContext) {
                 // .off()
@@ -155,7 +155,7 @@ export class S {
 export class s {
     constructor(initialValue) {
         // 1
-        this._value = null;
+        this._value = undefined;
 
         // [
         //   () => {},
@@ -165,12 +165,12 @@ export class s {
 
         this._onChangeDelay = null;
 
-        if (initialValue) {
+        if (initialValue !== undefined) {
             this._value = initialValue;
         }
     }
 
-    set(value = null) {
+    set(value = undefined) {
         if (value === this._value) {
             return;
         }
@@ -198,7 +198,7 @@ export class s {
         this._subscriptions.push(callback);
     }
 
-    off(callback = null) {
+    off(callback = undefined) {
         if (!callback) {
             this._subscriptions = [];
         } else {
@@ -207,7 +207,7 @@ export class s {
     }
 
     destroy() {
-        this._value = null;
+        this._value = undefined;
         this._subscriptions = [];
         if (this._onChangeDelay) {
             clearTimeout(this._onChangeDelay);
