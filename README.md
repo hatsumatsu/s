@@ -99,7 +99,7 @@ console.log('B');
 -   `key`
 -   `value`
 -   `immediate` By default subscriptions are debounced by key. Set to `true` to trigger subscriptions immediately instead.
--   `triggerWhenEqual` By default subscriptions are not triggered if new value `===` previous value. Set to `true` to call subscriptions.
+-   `triggerWhenEqual` By default subscriptions are not triggered if `new value === previous value`. Set to `true` to always call subscriptions.
 
 `get( key )`
 
@@ -156,7 +156,7 @@ state.destroy();
 
 -   `value`
 -   `immediate` By default subscriptions are debounced. Set to `true` to trigger subscriptions immediately instead.
--   `triggerWhenEqual` By default subscriptions are not triggered if new value `===` previous value. Set to `true` to call subscriptions.
+-   `triggerWhenEqual` By default subscriptions are not triggered if `new value === previous value`. Set to `true` to call always subscriptions.
 
 `get()`
 
