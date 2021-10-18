@@ -92,6 +92,30 @@ console.log('B');
 //    'x changed 1'
 ```
 
+### API
+
+`set( key, value, immediate = false, triggerWhenEqual = false )`
+
+-   `key`
+-   `value`
+-   `immediate` By default subscriptions are debounced by key. Set to `true` to trigger subscriptions immediately instead.
+-   `triggerWhenEqual` By default subscriptions are not triggered if new value `===` previous value. Set to `true` to call subscriptions.
+
+`get( key )`
+
+-   `key`
+
+`on( key, callback, context = undefined )`
+
+-   `key`
+-   `callback`
+-   `context` optional context string for bulk unsubscription
+
+`off()`
+
+-   `key` Optional. Set to select which subscriptions to unsubscribe.
+-   `(callback|context)` Optional. Set to select which subscriptions to unsubscribe.
+
 ### Atomic state
 
 Instead of having a state tree with `key:value` pairs you can also use atomic state items with `s` instead of `S`.
@@ -125,3 +149,22 @@ x.off();
 // Destroy instance
 state.destroy();
 ```
+
+### API
+
+`set( value, immediate = false, triggerWhenEqual = false )`
+
+-   `value`
+-   `immediate` By default subscriptions are debounced. Set to `true` to trigger subscriptions immediately instead.
+-   `triggerWhenEqual` By default subscriptions are not triggered if new value `===` previous value. Set to `true` to call subscriptions.
+
+`get()`
+
+`on( callback )`
+
+-   `key`
+-   `callback`
+
+`off( callback = undefined )`
+
+-   `callback` Optional. Set to select which subscriptions to unsubscribe.

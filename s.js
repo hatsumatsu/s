@@ -42,18 +42,22 @@ export class S {
         }
     }
 
-    set(key, value = undefined) {
+    set(key, value = undefined, immediate = false, triggerWhenEqual = false) {
         if (!key || typeof key !== 'string') {
             throw new Error('No key provided.');
         }
 
-        if (value === this._state[key]) {
+        if (!triggerWhenEqual && value === this._state[key]) {
             return;
         }
 
         this._state[key] = value;
 
-        this._debounceOnChange(key);
+        if (immediate) {
+            this._onChange(key);
+        } else {
+            this._debounceOnChange(key);
+        }
     }
 
     get(key) {
@@ -170,8 +174,8 @@ export class s {
         }
     }
 
-    set(value = undefined) {
-        if (value === this._value) {
+    set(value = undefined, immediate = false, triggerWhenEqual = false) {
+        if (!triggerWhenEqual && value === this._value) {
             return;
         }
 
@@ -181,9 +185,14 @@ export class s {
         if (this._onChangeDelay) {
             clearTimeout(this._onChangeDelay);
         }
-        this._onChangeDelay = setTimeout(() => {
+
+        if (immediate) {
             this._onChange();
-        }, 1);
+        } else {
+            this._onChangeDelay = setTimeout(() => {
+                this._onChange();
+            }, 1);
+        }
     }
 
     get() {
