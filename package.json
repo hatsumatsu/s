@@ -1,6 +1,6 @@
 {
     "name": "@superstructure.net/s",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "main": "s.js",
     "description": "Lean subscription-based state management.",
     "license": "MIT",
