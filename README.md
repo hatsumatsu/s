@@ -13,6 +13,9 @@ Lean subscription-based state management.
 
 `npm install @superstructure.net/s`
 
+> Note: This library comes as es6 module only.
+> If you use a transpiler like babel or swc make sure to include `/node_modules/@superstructure.net/s` in your transpiler’s config.
+
 ### Usage
 
 ```js
