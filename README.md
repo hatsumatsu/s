@@ -108,6 +108,10 @@ console.log('B');
 
 -   `key`
 
+`toggle( key, immediate = false, triggerWhenEqual = false )`
+
+Same as `set()` but toggles a boolean value.
+
 `on( key, callback, context = undefined )`
 
 -   `key`
@@ -143,10 +147,10 @@ const onChangeX = () => {
 
 x.on(onChangeX);
 
-// Unsubscribe
-// 1. Unsubscribe specific callback
+// Unsubscribe ...
+// ... specific callback
 x.off(onChangeX);
-// 2. Unsubscribe all callbacks
+// ... Unsubscribe all callbacks
 x.off();
 
 // Destroy instance

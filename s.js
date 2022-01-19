@@ -68,6 +68,10 @@ export class S {
         return this._state[key];
     }
 
+    toggle(key, immediate = false, triggerWhenEqual = false) {
+        this.set(key, !Boolean(this.get(key)), immediate, triggerWhenEqual);
+    }
+
     on(key, callback, context = undefined) {
         if (!key || typeof key !== 'string') {
             throw new Error('No key provided.');
@@ -197,6 +201,10 @@ export class s {
 
     get() {
         return this._value;
+    }
+
+    toggle(immediate = false, triggerWhenEqual = false) {
+        this.set(!Boolean(this.get()), immediate, triggerWhenEqual);
     }
 
     on(callback) {
