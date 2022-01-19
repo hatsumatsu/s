@@ -72,19 +72,21 @@ export class S {
         this.set(key, !Boolean(this.get(key)), immediate, triggerWhenEqual);
     }
 
-    on(key, callback, context = undefined) {
-        if (!key || typeof key !== 'string') {
-            throw new Error('No key provided.');
+    on(keys, callback, context = undefined) {
+        if (!keys || typeof keys !== 'string') {
+            throw new Error('No keys provided.');
         }
 
         if (!callback || typeof callback !== 'function') {
             throw new Error('No callback provided.');
         }
 
-        this._subscriptions.push({
-            key: key,
-            callback: callback,
-            context: context,
+        keys.split(' ').forEach((key) => {
+            this._subscriptions.push({
+                key: key,
+                callback: callback,
+                context: context,
+            });
         });
     }
 

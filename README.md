@@ -112,9 +112,9 @@ console.log('B');
 
 Same as `set()` but toggles a boolean value.
 
-`on( key, callback, context = undefined )`
+`on( keys, callback, context = undefined )`
 
--   `key`
+-   `keys` one or more keys separated by space
 -   `callback`
 -   `context` optional context string for bulk unsubscription
 
