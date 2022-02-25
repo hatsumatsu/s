@@ -34,13 +34,21 @@ state.set('x', 1);
 state.get('x'); // 1
 
 // Subscribe to changes
+// - single key
 const onChangeX = () => {
-    console.log('x changed', state.get('x'));
+    console.log(`x changed: ${state.get('x')}`);
 };
 
 state.on('x', onChangeX);
 
-// pass optional context for bulk unsubscription
+// - multiple keys
+const onChangeAnything = () => {
+    console.log(`x or message changed: ${state.get('x')}, ${state.get('message')}`);
+};
+
+state.on('x message', onChangeAnything);
+
+// - optional context for bulk unsubscription
 state.on('x', onChangeX, 'myContext');
 
 // Unsubscribe ...
@@ -61,11 +69,11 @@ state.off();
 state.destroy();
 ```
 
-Subscriptions are debounced per key, updating a value frequently only calls its callbacks once:
+Subscriptions are debounced per key by default. Updating a key’s value frequently only calls its subscriptions once:
 
 ```js
 state.on('x', () => {
-    console.log('x changed', state.get('x'));
+    console.log(`x changed: ${state.get('x')}`);
 });
 
 state.set('x', 1);
@@ -73,14 +81,14 @@ state.set('x', 2);
 state.set('x', 3);
 state.set('x', 4);
 
-// Only logs 'x changed 4'
+// Only logs 'x changed: 4'
 ```
 
 Be aware that debouncing means subscriptions are async:
 
 ```js
 state.on('x', () => {
-    console.log('x changed', state.get('x'));
+    console.log(`x changed: ${state.get('x')}`);
 });
 
 console.log('A');
@@ -89,11 +97,13 @@ state.set('x', 1);
 
 console.log('B');
 
-// Log order:
+// Logs:
 //    'A'
 //    'B'
-//    'x changed 1'
+//    'x changed: 1'
 ```
+
+You can opt-out of this behavior by using the `immediate` flag when setting a value (See API).
 
 ### API
 
@@ -142,7 +152,7 @@ x.get(); // 1
 
 // Subscribe to changes
 const onChangeX = () => {
-    console.log('x changed', x.get());
+    console.log(`x changed: ${x.get()}`);
 };
 
 x.on(onChangeX);
