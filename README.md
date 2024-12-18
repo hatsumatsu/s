@@ -157,9 +157,14 @@ const onChangeX = () => {
 
 x.on(onChangeX);
 
+// add an optional context to unsubscribe granulary:
+x.on(onChangeX, 'myContext');
+
 // Unsubscribe ...
 // ... specific callback
 x.off(onChangeX);
+// ... specific context
+x.off('myContext');
 // ... Unsubscribe all callbacks
 x.off();
 
@@ -177,11 +182,11 @@ state.destroy();
 
 `get()`
 
-`on( callback )`
+`on( callback, context )`
 
--   `key`
 -   `callback`
+-   `context` Optional. Context for graunlar unsubscription. 
 
 `off( callback = undefined )`
 
--   `callback` Optional. Set to select which subscriptions to unsubscribe.
+-   `(callback|context)` Optional. Set to select which subscriptions to unsubscribe.

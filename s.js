@@ -1,9 +1,9 @@
 /**
  * 
-	//////
+    //////
   ///     ´
-	///
-	  /////
+    ///
+      /////
   ,     ///
    //////
 
@@ -209,19 +209,34 @@ export class s {
         this.set(!Boolean(this.get()), immediate, triggerWhenEqual);
     }
 
-    on(callback) {
+    on(callback, context = undefined) {
         if (!callback || typeof callback !== 'function') {
             throw new Error('No callback provided.');
         }
 
-        this._subscriptions.push(callback);
+        this._subscriptions.push({
+            callback: callback,
+            context: context,
+        });
     }
 
-    off(callback = undefined) {
-        if (!callback) {
+    off(callbackOrContext = undefined) {
+        if (!callbackOrContext) {
+            // .off()
             this._subscriptions = [];
         } else {
-            this._subscriptions = this._subscriptions.filter((_callback) => callback !== _callback);
+            // .off( callbackOrContext )
+            if (typeof callbackOrContext === 'string') {
+                // callbackOrContext is context
+                this._subscriptions = this._subscriptions.filter(
+                    (subscription) => callbackOrContext !== subscription.context
+                );
+            } else {
+                // callbackOrContext is callback
+                this._subscriptions = this._subscriptions.filter((subscription) => {
+                    return callbackOrContext !== subscription.callback;
+                });
+            }
         }
     }
 
@@ -238,8 +253,8 @@ export class s {
             return;
         }
 
-        this._subscriptions.forEach((_callback) => {
-            _callback.call();
+        this._subscriptions.forEach((_subscription) => {
+            _subscription.callback.call();
         });
     }
 }
